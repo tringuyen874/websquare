@@ -29,42 +29,22 @@ public class UserController {
     
     @GetMapping("/getUser")
     public ResponseEntity<User> getUser(@RequestParam String name) {
-        User user = userService.getUser(name);
-        if (user == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
-            return new ResponseEntity<>(user, HttpStatus.OK);
-        }
+        return userService.getUser(name);
     }
 
     @GetMapping("path")
     public List<User> getUsers(@RequestParam Map<String,String> allParams) throws ParseException{
-        Map<String, Object> convertedParams = new HashMap<>();
-        for (Map.Entry<String, String> entry : allParams.entrySet()) {
-            switch (entry.getKey()) {
-                case "phone":
-                    convertedParams.put(entry.getKey(), Integer.parseInt(entry.getValue()));
-                    break;
-                case "birthFrom":
-                case "birthTo":
-                    convertedParams.put(entry.getKey(), new SimpleDateFormat("yyyy-MM-dd").parse(entry.getValue()));
-                    break;
-                default:
-                    convertedParams.put(entry.getKey(), entry.getValue());
-                    break;
-            }
-        }
-        return userService.getUsers(convertedParams);
+        return userService.getUsers(allParams);
     }
 
     @PostMapping("/createUser")
-    public String createUser(@RequestBody User user) {
+    public ResponseEntity<User> createUser(@RequestBody User user) {
         return userService.createUser(user);
     }
     
     @DeleteMapping("/deleteUser")
-    public String deleteUser(@RequestBody String param) {
-        return new String();
+    public ResponseEntity<String> deleteUser(@RequestBody User user) {
+        return userService.deleteUser(user);
     }
 
     

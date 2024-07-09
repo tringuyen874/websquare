@@ -8,5 +8,6 @@ import com.example.websquare.model.User;
 
 @Repository
 public interface UserRepo extends JpaRepository<User, Long>, JpaSpecificationExecutor<User>{
+    User findByName(String name);
     
 }
