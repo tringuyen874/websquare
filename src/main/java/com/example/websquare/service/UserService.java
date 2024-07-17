@@ -40,8 +40,6 @@ public class UserService {
                 createInfo.getTeam(),
                 true
         );
-        System.out.println(createInfo.getName());
-        System.out.println(user.getName());
         user.setAction("Edit");
         return user;
     }
@@ -49,8 +47,6 @@ public class UserService {
     public Map<String, String> createUser(CreateRequest request) {
         CreateRequestDTO createInfo = request.getCreateInfo();
         Map<String, String> messageResult = new HashMap<>();
-        System.out.println(request);
-        System.out.println(createInfo);
         User existingPhone = userRepository.findByPhone(createInfo.getPhone());
         User existingEmail = userRepository.findByEmail(createInfo.getEmail());
         if(existingPhone != null) {
@@ -78,7 +74,6 @@ public class UserService {
                 searchParams.put(field.getName(), value);
             }
         }
-        System.out.println(searchParams);
         Specification<User> spec = createQuery(searchParams);
         Map<String, List<User>> searchResults = new HashMap<>();
         List<User> users = userRepository.findAll(spec);
@@ -87,7 +82,7 @@ public class UserService {
     }
     
     public Specification<User> createQuery(Map<String, Object> searchParams) {
-        return (root, query, criteriaBuilder) -> { // criteriaBuilder
+        return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
             searchParams.forEach((key, value) -> {
                 if (key.equals("birthdayFrom") && value != null && !value.toString().isEmpty()) {
@@ -98,23 +93,17 @@ public class UserService {
                     predicates.add(criteriaBuilder.equal(root.get(key), value));
                 }
             });
-            
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }
 
     public void deleteUser(DeleteRequest deleteInfo) {
         List<DeleteRequestDTO> userToDelete = deleteInfo.getSearchResults();
-        System.out.println(userToDelete);
         for(DeleteRequestDTO data : userToDelete){
             if (data.getChecked().equals("1")) {
                 User user = userRepository.findByPhone(data.getPhone());
-                System.out.println(user);
                 userRepository.delete(user);
             }
-            System.out.println("not tick");
         }
     }
-
-    
 }

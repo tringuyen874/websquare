@@ -44,7 +44,6 @@ public class User {
     @Column(name = "action")
     private String action;
 
-    // private String checked;
     public User(String name, Date birthday, String gender, Integer phone, String email, String address, String team, boolean b) {
         this.name = name;
         this.birthday = birthday;
@@ -54,6 +53,5 @@ public class User {
         this.address = address;
         this.team = team;
         this.status = b;
-
     }
 }
