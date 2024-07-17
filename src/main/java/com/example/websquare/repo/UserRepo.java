@@ -6,8 +6,11 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import com.example.websquare.model.User;
 
+
 @Repository
 public interface UserRepo extends JpaRepository<User, Long>, JpaSpecificationExecutor<User>{
     User findByName(String name);
-    
+    User findByPhone(Integer phone);
+
+    User findByEmail(String email);
 }

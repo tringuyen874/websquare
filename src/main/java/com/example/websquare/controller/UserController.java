@@ -1,25 +1,22 @@
 package com.example.websquare.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import com.example.websquare.model.CreateRequest;
+import com.example.websquare.model.DeleteRequest;
+import com.example.websquare.model.DeleteRequestDTO;
+import com.example.websquare.model.SearchRequest;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import com.example.websquare.model.User;
 import com.example.websquare.service.UserService;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -32,22 +29,20 @@ public class UserController {
         return userService.getUser(name);
     }
 
-    @GetMapping("path")
-    public List<User> getUsers(@RequestParam Map<String,String> allParams) throws ParseException{
-        return userService.getUsers(allParams);
+    @PostMapping("/getUsers")
+    public ResponseEntity<Map<String, List<User>>> getUsers(@RequestBody SearchRequest searchRequest) throws ParseException, IllegalArgumentException, IllegalAccessException{
+        return userService.getUsers(searchRequest);
     }
 
     @PostMapping("/createUser")
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        return userService.createUser(user);
+    public Map<String, Map<String, String>> createUser(@RequestBody CreateRequest createRequest) {
+        Map<String, Map<String, String>> createResult = new HashMap<>();
+        createResult.put("messageError", userService.createUser(createRequest));
+        return createResult;
     }
     
-    @DeleteMapping("/deleteUser")
-    public ResponseEntity<String> deleteUser(@RequestBody User user) {
-        return userService.deleteUser(user);
+    @DeleteMapping("/deleteUsers")
+    public void deleteUser(@RequestBody DeleteRequest deleteInfo) {
+        userService.deleteUser(deleteInfo);
     }
-
-    
-    
-    
 }
